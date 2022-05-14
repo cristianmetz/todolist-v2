@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 const res = require("express/lib/response");
 const { redirect } = require("express/lib/response");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
 
@@ -14,8 +17,9 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
+const apiKey = process.env.MONGODB_ATLAST_PSW
 
-mongoose.connect("mongodb+srv://admin-cristian:jodwit-Jykrom-6pyzke@cluster0.d44wg.mongodb.net/todolistDB", {useNewUrlParser: true});
+mongoose.connect(`mongodb+srv://admin-cristian:${apiKey}@cluster0.d44wg.mongodb.net/todolistDB`, {useNewUrlParser: true});
 
 const itemSchema = new mongoose.Schema({
   name : String
@@ -138,6 +142,11 @@ app.get("/about", function(req, res){
   res.render("about");
 });
 
-app.listen(3000, function() {
-  console.log("Server started on port 3000");
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+app.listen(port, function() {
+  console.log("Server has started successfully.");
 });
